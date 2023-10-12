@@ -1,95 +1,244 @@
+# imports
+import itertools
 import random
+import time
 
-class Blackjack():
+class Deck:
+    suits = ['Diamonds', 'Spades', 'Clubs', 'Hearts']
+    values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
 
-# When game begins:  shuffle the 4 suits together
-    def __init__(self, player=0, player_hand=[], dealer=0, dealer_hand=[]):
-        self.player = player
-        self.dealer = dealer
-        self.player_hand = player_hand
-        self.dealer_hand = dealer_hand
+    def __init__(self):
+        self.cards = []
+    
+    def __len__(self):
+        return len(self.cards)
+    
+    def fill(self, decks):
+        for i in range(decks):
+            for suit, value in itertools.product(self.suits, self.values):
+                self.cards.append(Card(suit, value))
+    
+    def clear(self):
+        self.cards = []
 
-
-
-
-# deal to both player and dealer (both cards showing for player, only 1 for dealer) (pop() to take from shuffled deck)
-    def deal(self):
-        cards = list(range(1, 14))
-        clubs = cards
-        diamonds = cards
-        hearts = cards
-        spades = cards
-        all_cards = clubs + diamonds + hearts + spades
-        random.shuffle(all_cards)
-        active_hand = True
-        while active_hand:            
-            self.player_hand.append(all_cards.pop(0))
-            self.dealer_hand.append(all_cards.pop(0))
-            self.player_hand.append(all_cards.pop(0))
-            print(f"The dealer has {self.dealer_hand[0]}.")
-            self.dealer_hand.append(all_cards.pop(0))
-            print(f"You have {sum(self.player_hand)}.")
-            if sum(self.player_hand) == 21:
-                print("Blackjack, you win!")
-                active_hand = False
-            elif sum(self.player_hand) > 21:
-                print("Sorry, you went over 21 and have busted.")
-                active_hand = False
-
-            else:
-                response = input("hit or stand? ")
-                if response.lower() == "stand":
-                    print(f"The dealer's score with the second card is {sum(self.dealer_hand)}")
-                    if self.player_hand > self.dealer_hand:
-                        print("Congrats, you win!")
-                    elif self.player_hand == self.dealer_hand:
-                        print("The scores are the same, it's a push (tie).")
-                    else:
-                        print("The dealer wins.")
-                elif response.lower() == "hit":
-                    self.player_hand.append(all_cards.pop(0))
-                    print(f"You now have")
-
-                    
+    def shuffle(self):
+        random.shuffle(self.cards)
 
 
-                try:
-                    response.lower() == "hit" or response.lower() == "stand"
-                    if response.lower() == "hit":
-                        self.player_hand.append(all_cards.pop(0))
+class Card:
+    def __init__(self, suit, value):
+        self.suit = suit
+        self.value = value
+
+    def __str__(self):
+        return f"{self.value} of {self.suit}"
+    
+    @property
+    def score(self):
+        if self.value in ['Jack', 'Queen', 'King']:
+            return 10
+        if self.value == 'Ace':
+            return 11
+        else:
+            return int(self.value)
 
 
-                    elif response.lower() == "stand":
-                        self.player_hand.append(all_cards.pop(0))
-                        print
+class Player:
+    def __init__(self):
+        self.hand = []
 
+    def getHand(self):
+        print("\t\t\tThe player's hand:")
+        for card in (self.hand):
+            print(card)
+            print("")
+        print("")
 
-                except:
-                    print("Sorry, that is not a valid command. Please enter 'hit' or 'stand'")        
-                            
+    def resetHand(self):
+        self.hand = []
 
-            # print(self.player_hand)
+    @property
+    def aces(self):
+        return len([card for card in self.hand if card.value == 'Ace'])
+    
+    @property
+    def score(self):
+        return sum([card.score for card in self.hand])
 
-
-
-
-# if player gets 21 with first 2 cards, they win
-
-# present value to player and allow them to stand or hit until busting over 21
-
-# if player stands, show the second of the dealers cards (keep hidden until player selects stand)
-
-# don't allow hit/stand for dealer, just compare with player unless player busts (keep in mind dealer CAN bust, (13 + 13) is over 21)
-
-
-
-
-my_hand = Blackjack()
-
-def run(Blackjack):
-    Blackjack.deal()
+    @property
+    def score_aces(self):
+        score = self.score
+        for ace in range(self.aces):
+            if score > 21:
+                score -= 10
+        return score
+    
+    @property
+    def isBusted(self):
+        if self.score_aces > 21:
+            return True
+        return False
     
 
+class Gambler(Player):
+    def __init__(self, chips):
+        super().__init__()
+        self.chips = chips
 
-run(my_hand)
+    def bet(self):
+        stake = input(f"Total chips: {self.chips}. Enter your bet amount: ")
+        try:
+            if int(stake) > self.chips:
+                print("You cannot bet more than you have")
+                self.bet()
+            else:
+                self.chips -= int(stake)
+                return int(stake)
+        except ValueError:
+            print('Please enter a valid integer.')
+            self.bet()
 
+    
+class Dealer(Player):
+    def __init__(self):
+        super().__init__()
+        self.hand = []
+
+    def show(self, all = False):
+        print("\t\t\tThe dealer has:")
+        if all:
+            for card in self.hand:
+                print(card)
+        else:
+            print(self.hand[0])
+            print('PUT SOMETHING HERE')
+
+
+class Blackjack:
+    def __init__(self):
+        self.players = []
+        self.deck = []
+        self.player_bet = 0
+        self.players_turn = True
+
+    def deal(self):
+        print(f"There are {len(self.deck)} cards left in the deck.")
+        if len(self.deck) < 104:
+            print('Reshuffling...')
+            self.deck.clear()
+            self.deck.fill(4)
+            self.deck.shuffle()
+        for i in range(2):
+            for player in self.players:
+                player.hand.append(self.deck.cards.pop())
+
+    def hit(self, player):
+        player.hand.append(self.deck.cards.pop())
+        if isinstance(player, Dealer):
+            player.show(True)
+        else:
+            player.getHand()
+        self.checkBust(player)
+        print(f"Player score: {player.score_aces}")
+
+    def player_choice(self, player):
+        answer = input("Hit or Stand? (H/S): ")
+        if answer.lower() == "h":
+            self.hit(player)
+        if answer.lower() == "s":
+            print(f"Standing at: {player.score_aces}")
+            self.players_turn = False
+
+    def checkBust(self, player):
+        if player.isBusted:
+            if(isinstance(player, Gambler)):
+                print("You bust")
+                self.players_turn = False
+                self.player_lost()
+            elif(isinstance(player, Dealer)):
+                print("Dealer busts")
+
+    def player_lost(self):
+        print("You've lost")
+
+    def draw(self, player):
+        print(f"It is a draw. You receive your {self.player_bet} back.")
+        player.chips += self.player_bet
+
+    def player_won(self, player):
+        print(f"You won! Here are {self.player_bet * 2} chips.")
+        player.chips += self.player_bet * 2
+
+    def compare(self, player, dealer):
+        if player.score_aces > dealer.score_aces:
+            self.player_won(player)
+        elif player.score_aces == dealer.score_aces:
+            self.draw(player)
+        else:
+            self.player_lost()
+
+    def reset(self):
+        for player in self.players:
+            player.resetHand()
+        self.player_bet = 0
+
+    def replay(self, player):
+        again = None
+        while again != "y" or again != "n":
+            again = input("Play again? (Y/N):")
+            if again.lower() == "y":
+                return True
+            elif again.lower() == "n":
+                print(f"You leave with {player.chips} chips, thanks for playing!")
+                return False
+            else:
+                print("Invalid input, please try again.")
+
+    def play(self):
+        print("This is Blackjack")
+        self.deck = Deck()
+        player = Gambler(100)
+        dealer = Dealer()
+        self.players = [player, dealer]
+        self.deck.fill(4)
+        self.deck.shuffle()
+        running = True
+
+        while running:
+            if self.players[0].chips == 0:
+                print("You've run out of chips")
+                break
+            self.player_bet = player.bet()
+            self.deal()
+            dealer.show()
+            player.getHand()
+            while self.players_turn:
+                self.player_choice(player)
+            if not player.isBusted:
+                dealer.show()
+                while not self.players_turn:
+                    if dealer.score_aces < 17:
+                        print("Dealer hits")
+                        self.hit(dealer)
+                        time.sleep(1)
+                    elif dealer.score_aces >= 17 and not dealer.isBusted:
+                        print(f"Dealer stands with {dealer.score_aces}.")
+                        break
+                    elif dealer.isBusted:
+                        self.player_won(player)
+                        break
+                if not dealer.isBusted:
+                    self.compare(player, dealer)
+            again = self.replay(player)
+            if not again:
+                running = False
+            self.players_turn = True
+            self.reset()
+
+def main():
+    game = Blackjack()
+    game.play()
+
+
+if __name__ == "__main__":
+    main()
