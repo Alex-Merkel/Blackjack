@@ -1,12 +1,7 @@
 from flask import render_template, request, redirect, url_for
 from app import app
-from . import Deck, Card, Player, Gambler, Dealer, Blackjack
+# from . import Deck, Card, Player, Gambler, Dealer, Blackjack
 
-@app.route('/')
-def home():
-    # Initialize the game and display the game interface
-    game = Blackjack()
-    return render_template('blackjack.html', game=game)
 
 @app.route('/start_game')
 def start_game():

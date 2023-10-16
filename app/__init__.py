@@ -2,7 +2,6 @@ from flask import Flask, render_template
 import itertools
 import random
 import time
-# import routes from .routes
 
 
 app = Flask(__name__)
@@ -11,7 +10,7 @@ app = Flask(__name__)
 def home():
     # Initialize the game and display the game interface
     game = Blackjack()
-    return render_template('blackjack.html', game=game)
+    return render_template('game.html', game=game)
 
 
 class Deck:
