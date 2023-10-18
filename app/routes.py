@@ -1,30 +1,30 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 from app import app
-# from . import Deck, Card, Player, Gambler, Dealer, Blackjack
+from app.game_logic import Blackjack
 
+# Initialize the game object
+game = Blackjack()
+
+@app.route('/')
+def home():
+    return render_template('game.html')
 
 @app.route('/start_game')
 def start_game():
-    # Start a new game (initialize the Blackjack game object)
-    # Redirect back to the home route
+    game.play()  # Start a new game using the game object
     return redirect(url_for('home'))
 
 @app.route('/hit', methods=['POST'])
 def hit():
-    # Handle player's "Hit" action
-    # Add a card to the player's hand and update the game state
-    # Redirect back to the home route
+    game.hit_player()  # Call a method in the game logic to handle player hitting
     return redirect(url_for('home'))
 
 @app.route('/stand', methods=['POST'])
 def stand():
-    # Handle player's "Stand" action
-    # Let the dealer play and determine the winner
-    # Redirect back to the home route
+    game.stand_player()  # Call a method in the game logic to handle player standing
     return redirect(url_for('home'))
 
 @app.route('/restart_game')
 def restart_game():
-    # Reset the game and start a new round
-    # Redirect back to the home route
+    game.reset()  # Reset the game using the game object
     return redirect(url_for('home'))
