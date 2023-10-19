@@ -11,8 +11,10 @@ def home():
 
 @app.route('/start_game')
 def start_game():
-    game.play()  # Start a new game using the game object
-    return redirect(url_for('home'))
+    game.play()
+    game_state = game.get_game_state()
+    print(game_state)
+    return jsonify(game_state)
 
 @app.route('/hit', methods=['POST'])
 def hit():

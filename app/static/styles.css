@@ -14,3 +14,19 @@
     background-color: white;
     padding: 20px;
 }
+
+/* Adjusting card images down */
+img {
+    width: 200px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+
+    img {
+        width: 30px;
+    }
+    /* Other mobile-specific styles */
+}
+

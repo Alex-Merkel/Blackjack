@@ -64,27 +64,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Initialize Game function
 function initializeGame() {
-
     fetch('/start_game')
         .then(response => response.json())
         .then(data => {
+            console.log(data, 'potato')
             // Process the game data returned by the server
-            data.playerCards.forEach(card => {
-                const imagePath = cardToImagePath(card);
+            data.player_cards.forEach(card => {
                 // Create an image element for the player's card
                 const playerCardImage = document.createElement("img");
-                playerCardImage.src = imagePath;
+                playerCardImage.src = cardToImagePath(card);
+                console.log(playerCardImage)
                 // Append it to the player's card container in your HTML
-                document.getElementById("player-cards").appendChild(playerCardImage);
+                document.getElementById("player-hand").appendChild(playerCardImage);
             });
 
-            data.dealerCards.forEach(card => {
-                const imagePath = cardToImagePath(card);
+            data.dealer_cards.forEach(card => {
                 // Create an image element for the dealer's card
                 const dealerCardImage = document.createElement("img");
-                dealerCardImage.src = imagePath;
+                dealerCardImage.src = cardToImagePath(card);
                 // Append it to the dealer's card container in your HTML
-                document.getElementById("dealer-cards").appendChild(dealerCardImage);
+                document.getElementById("dealer-hand").appendChild(dealerCardImage);
             });
         })
         .catch(error => {
@@ -94,7 +93,17 @@ function initializeGame() {
 
 
 
+
 function cardToImagePath(card) {
     const [value, suit] = card.split(' of ');
     return `static/img/${value.toLowerCase()}_of_${suit.toLowerCase()}.png`;
 }
+
+
+// event listener for stand:
+const standButton = document.getElementById("stand");
+standButton.addEventListener("click", () => {
+    // Replace the face-down card with the actual dealer's first card
+    revealDealerCard(initialDealerCard);
+    // Other logic for the dealer's turn
+});
