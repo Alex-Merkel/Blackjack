@@ -11,22 +11,38 @@ def home():
 
 @app.route('/start_game')
 def start_game():
-    game.play()
-    game_state = game.get_game_state()
-    print(game_state)
+    game.initiate_game()
+    player_score = game.players[0].score_aces
+    dealer_score = game.players[1].score_aces
+    game_state = game.get_game_state(player_score, dealer_score)
     return jsonify(game_state)
 
 @app.route('/hit', methods=['POST'])
 def hit():
-    game.hit_player()  # Call a method in the game logic to handle player hitting
-    return redirect(url_for('home'))
+    player = game.players[0]
+    game.hit(player)
+    player_score = game.players[0].score_aces
+    dealer_score = game.players[1].score_aces
+    game_state = game.get_game_state(player_score, dealer_score)
+    return jsonify(game_state)
 
 @app.route('/stand', methods=['POST'])
 def stand():
-    game.stand_player()  # Call a method in the game logic to handle player standing
-    return redirect(url_for('home'))
+    game.stand()
+    player_score = game.players[0].score_aces
+    dealer_score = game.players[1].score_aces
+    game_state = game.get_game_state(player_score, dealer_score)
+    return jsonify(game_state)
 
-@app.route('/restart_game')
-def restart_game():
-    game.reset()  # Reset the game using the game object
-    return redirect(url_for('home'))
+@app.route('/play_again')
+def play_again():
+    game.play_again()
+    player_score = game.players[0].score_aces
+    dealer_score = game.players[1].score_aces
+    game_state = game.get_game_state(player_score, dealer_score)  
+    return jsonify(game_state)
+
+
+# Make function for player_score, dealer_score, game_state since used in all routes above!!!???
+# Add below route
+# @app.route('/restart / reset')

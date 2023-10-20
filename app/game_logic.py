@@ -1,5 +1,6 @@
 import itertools
 import random
+# Get rid of import time???
 import time
 
 
@@ -47,17 +48,9 @@ class Player:
     def __init__(self):
         self.hand = []
 
-    def getHand(self):
-        print("\t\t\tThe player's hand:")
-        for card in (self.hand):
-            print(card)
-            print("")
-        print("")
 
-    def get_hand_info(self):
-        # Create a list of dictionaries with card information
-        hand_info = [{'suit': card.suit, 'value': card.value} for card in self.hand]
-        return hand_info
+
+
 
     def resetHand(self):
         self.hand = []
@@ -90,14 +83,14 @@ class Dealer(Player):
         super().__init__()
         self.hand = []
 
-    def show(self, all = False):
-        print("\t\t\tThe dealer has:")
-        if all:
-            for card in self.hand:
-                print(card)
-        else:
-            print(self.hand[0])
-            print('PUT SOMETHING HERE')
+    # def show(self, all = False):
+    #     print("\t\t\tThe dealer has:")
+    #     if all:
+    #         for card in self.hand:
+    #             print(card)
+    #     else:
+    #         print(self.hand[0])
+    #         print('PUT SOMETHING HERE')
 
 
 class Blackjack:
@@ -118,48 +111,72 @@ class Blackjack:
             for player in self.players:
                 player.hand.append(self.deck.cards.pop())
 
-    def get_game_state(self):
+    def get_game_state(self, player_score, dealer_score):
         player_info = [str(card) for card in self.players[0].hand]
         dealer_info = [str(card) for card in self.players[1].hand]
+
         game_state = {
             'player_cards': player_info,
             'dealer_cards': dealer_info,
+            'player_score': player_score,
+            'dealer_score': dealer_score,
         }
         return game_state
+
 
 
     def hit(self, player):
         new_card = self.deck.cards.pop()
         player.hand.append(new_card)
         if isinstance(player, Dealer):
-            player.show(True)
+            # Should be good to delete line below!!!???
+            # player.show(True)
             self.checkBust(player, is_dealer=True)
         else:
-            player.getHand()
+            print('watermelons_def hit')
+            # player.getHand()
         self.checkBust(player)
         print(str(new_card))
         return str(new_card)
+    
+    def dealer_turn(self):
+        dealer = self.players[1]
+        while dealer.score_aces < 17:
+            self.hit(dealer)
 
-    # NEED TO ADJUST
-    def player_choice(self, player):
-        answer = input("Hit or Stand? (H/S): ")
-        if answer.lower() == "h":
-            self.hit(player)
-        if answer.lower() == "s":
-            self.players_turn = False
-            Dealer.hand[1] = initialDealerCard
-            dealer_score = Dealer.score_aces  
-            game_state = self.get_game_state(player.score_aces, dealer_score)
-            return game_state
+        # Check if the dealer has busted after finishing their turn
+        self.checkBust(dealer, is_dealer=True)
+
+    def stand(self):
+        self.dealer_turn()
+
+        # Get player and dealer scores
+        player_score = self.players[0].score_aces
+        dealer_score = self.players[1].score_aces
+
+
+        # Compare the scores
+        if dealer_score > player_score:
+            print("Dealer wins!")
+        elif dealer_score < player_score:
+            print("Player wins!")
+        else:
+            print("It's a draw!")
+
 
     def checkBust(self, player, is_dealer=False):
         if player.isBusted:
             if is_dealer:
-                print("Dealer busts")
+                # Check if the dealer has any Aces and reduce their score by 10 if it's over 21
+                while player.score_aces > 21 and player.aces > 0:
+                    player.hand[player.hand.index(next(card for card in player.hand if card.value == 'Ace'))].value = '1'
+                if player.score_aces > 21:
+                    print("Dealer busts")
             else:
                 print("You bust")
             self.players_turn = False
             self.player_lost()
+
 
 
     def player_lost(self):
@@ -183,19 +200,8 @@ class Blackjack:
         for player in self.players:
             player.resetHand()
 
-    def replay(self):
-        again = None
-        while again != "y" or again != "n":
-            again = input("Play again? (Y/N):")
-            if again.lower() == "y":
-                return True
-            elif again.lower() == "n":
-                print("Thanks for playing!")
-                return False
-            else:
-                print("Invalid input, please try again.")
 
-    def play(self):
+    def initiate_game(self):
         self.deck = Deck()
         player = Player()
         dealer = Dealer()
@@ -203,36 +209,20 @@ class Blackjack:
         self.deck.fill(4)
         self.deck.shuffle()
         self.deal()
-        # Save initial dealer card to use later
+        # Save initial (hidden / face-down) dealer card to use later
         self.initial_dealer_card = dealer.hand[0]
         print(self.initial_dealer_card)
 
-        # while self.players_turn:
-        #     player.getHand()
-        #     self.player_choice(player)
+    def play_again(self):
+        # maybe try self.reset() and get rid of 2 lines below???
+        self.players[0].resetHand()
+        self.players[1].resetHand()
+        self.players_turn = True 
+        self.inital_dealer_card = None
 
-        # if not player.isBusted:
-        #     dealer.show()
-        #     while not self.players_turn:
-        #         if dealer.score_aces < 17:
-        #             print("Dealer hits")
-        #             self.hit(dealer)
-        #             time.sleep(1)
-        #         elif dealer.score_aces >= 17 and not dealer.isBusted:
-        #             print(f"Dealer stands with {dealer.score_aces}.")
-        #             break
-        #         elif dealer.isBusted:
-        #             self.player_won()
-        #             break
-
-        # if not dealer.isBusted:
-        #     self.compare(player, dealer)
-
-        # again = self.replay()
-        # if not again:
-        #     self.reset()
-
-
-def main():
-    game = Blackjack()
-    game.play()
+        # Return the game state
+        player_score = self.players[0].score_aces
+        dealer_score = self.players[1].score_aces
+        game_state = self.get_game_state(player_score, dealer_score)
+        
+        return game_state

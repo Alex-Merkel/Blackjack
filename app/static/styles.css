@@ -1,5 +1,4 @@
-#startGameModal, #selectBetModal {
-    display: flex;
+#startGameModal, #selectBetModal, #endGameModal {
     justify-content: center;
     align-items: center;
     position: fixed;
@@ -10,9 +9,13 @@
     background-color: green;
 }
 
-#startGameModal .modal-content {
-    background-color: white;
+#startGameModal {
+    display: flex;
     padding: 20px;
+}
+
+#selectBetModal, #endGameModal {
+    display: none;
 }
 
 /* Adjusting card images down */
@@ -34,4 +37,9 @@ body, html, .container {
     height: 100%;
     margin: 0;
     padding: 0;
+}
+
+/* Setting min-width for midInfoRow so that hit/stand buttons and player_score don't shift when dealer_score is hidden */
+#midInfoRow {
+    min-width: 100px;
 }

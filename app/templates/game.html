@@ -14,28 +14,36 @@
     <div class="container container-fluid text-center mx-auto">
         <div class="d-flex flex-column align-items-center justify-content-between h-100">
             <div class="text-center">
-                <h2>Dealer's Hand</h2>
+                <h2>Dealer</h2>
                 <div id="dealer-hand">
                     <!-- Dealer's cards will be dynamically added here -->
                 </div>
-                <div id="dealer-score">
-                    <!-- Display dealer's score here -->
-                </div>
             </div>
-            <div class="row m-4">
-                <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between m-4 w-100">
+                <div class="d-flex align-items-center" id="midInfoRow">
+                    <div id="dealer-score">
+                        <!-- Display dealer's score here -->
+                    </div>
+                </div>
+                <div class="d-flex justify-content-evenly w-25">
                     <button id="hit" class="btn btn-success">Hit</button>
                     <button id="stand" class="btn btn-danger">Stand</button>
                 </div>
+                <div>
+                    <div id="player-score">
+                        <!-- Display player's score here -->
+                    </div>
+                    <div id="player-chips">
+                        <!-- Display player's chips here -->
+                    </div>
+                </div>
             </div>
+            
             <div class="text-center">               
                 <div id="player-hand">
                     <!-- Player's cards will be dynamically added here -->
                 </div>
-                <div id="player-score">
-                    <!-- Display player's score here -->
-                </div>
-                <h2>Player's Hand</h2>
+                <h2>Player</h2>
             </div>
         </div>
     </div>
@@ -43,7 +51,7 @@
     <!-- Start game modal -->
     <div id="startGameModal" class="modal">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content text-center">
                 <h3>Welcome to Blackjack!</h3>
                 <p>
                     Please hit Start Game below to play.
@@ -56,9 +64,9 @@
     <!-- Betting Modal -->
     <div id="selectBetModal" class="modal">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <p>Place your bet. (Current Chips: <span id="player-chips">100</span>)</p>
-                <input id="bet-amount" type="number" placeholder="0"/>
+            <div class="modal-content text-center">
+                <p>Place your bet. (Current Chips: <span id="player-chips-modal"></span>)</p>
+                <input class="text-center" id="bet-amount" type="number" placeholder="0"/>
                 <button id="select-bet" class="btn btn-primary">Select Bet Amount</button>
             </div>
         </div>
@@ -66,10 +74,12 @@
     
     <!-- End Game Modal -->
     <div id="endGameModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-dialog modal-dialog-centered">
             <!-- Modal content, showing the game result (win, lose, draw) and options to play again or exit -->
-            <button id="play-again" class="btn btn-warning">Play Again</button>
-            <button id="quit" class="btn btn-warning">Quit</button>
+            <div class="modal-content">
+                <h3 id="endGameHeader"><!-- Display Won/Lost/Draw Here --></h3>
+                <button id="play-again" class="btn btn-success">Play Again</button>
+            </div>
         </div>
     </div>
 
