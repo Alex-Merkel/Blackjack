@@ -105,6 +105,7 @@ class Blackjack:
         self.players = []
         self.deck = []
         self.players_turn = True
+        self.inital_dealer_card = None
 
     def deal(self):
         print(f"There are {len(self.deck)} cards left in the deck.")
@@ -203,8 +204,8 @@ class Blackjack:
         self.deck.shuffle()
         self.deal()
         # Save initial dealer card to use later
-        initialDealerCard = dealer.hand[0]
-        print(initialDealerCard)
+        self.initial_dealer_card = dealer.hand[0]
+        print(self.initial_dealer_card)
 
         # while self.players_turn:
         #     player.getHand()

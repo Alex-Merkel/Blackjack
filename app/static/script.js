@@ -67,18 +67,27 @@ function initializeGame() {
     fetch('/start_game')
         .then(response => response.json())
         .then(data => {
-            console.log(data, 'potato')
+            // Create an image element for the face-down card
+            const faceDownCardImage = document.createElement("img");
+            faceDownCardImage.src = 'static/img/card_back.png';
+            // Append it to the dealer's card container in your HTML
+            document.getElementById("dealer-hand").appendChild(faceDownCardImage);
+
             // Process the game data returned by the server
             data.player_cards.forEach(card => {
                 // Create an image element for the player's card
                 const playerCardImage = document.createElement("img");
                 playerCardImage.src = cardToImagePath(card);
-                console.log(playerCardImage)
                 // Append it to the player's card container in your HTML
                 document.getElementById("player-hand").appendChild(playerCardImage);
             });
 
-            data.dealer_cards.forEach(card => {
+            data.dealer_cards.forEach((card, index) => {
+                // Skip the first card when appending dealer cards
+                if (index === 0) {
+                    return;
+                }
+
                 // Create an image element for the dealer's card
                 const dealerCardImage = document.createElement("img");
                 dealerCardImage.src = cardToImagePath(card);
@@ -90,6 +99,7 @@ function initializeGame() {
             console.error('Error starting the game:', error);
         });
 }
+
 
 
 
@@ -107,3 +117,16 @@ standButton.addEventListener("click", () => {
     revealDealerCard(initialDealerCard);
     // Other logic for the dealer's turn
 });
+
+
+function revealDealerCard(actualCard) {
+    // Create an image element for the actual card
+    const dealerCardImage = document.createElement("img");
+    dealerCardImage.src = cardToImagePath(actualCard);
+
+    // Get the container element of the face-down card
+    const faceDownCardContainer = document.getElementById("dealer-hand").firstChild;
+
+    // Replace the face-down card with the actual card
+    document.getElementById("dealer-hand").replaceChild(dealerCardImage, faceDownCardContainer);
+}
