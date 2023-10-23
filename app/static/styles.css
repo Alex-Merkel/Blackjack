@@ -18,20 +18,27 @@
     display: none;
 }
 
-/* Adjusting card images down */
-img {
-    width: 200px; /* Adjust the width as needed */
-    height: auto; /* Maintain aspect ratio */
+/* Default styles for larger screens */
+@media (min-width: 992px) {
+    img {
+        width: 200px;
+    }
+}
+
+/* Adjusting card images down for medium screens */
+@media (min-width: 768px) and (max-width: 991px) {
+    img {
+        width: 100px;
+    }
 }
 
 /* Mobile styles */
 @media (max-width: 767px) {
-
     img {
-        width: 30px;
+        width: 60px; 
     }
-    /* Other mobile-specific styles */
 }
+
 
 body, html, .container {
     height: 100%;
@@ -39,7 +46,6 @@ body, html, .container {
     padding: 0;
 }
 
-/* Setting min-width for midInfoRow so that hit/stand buttons and player_score don't shift when dealer_score is hidden */
-#midInfoRow {
-    min-width: 100px;
+#hit, #stand {
+    min-width: 25%;
 }

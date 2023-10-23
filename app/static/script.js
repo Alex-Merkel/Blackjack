@@ -1,35 +1,25 @@
-// const playerChipsElement = document.getElementById("player-chips");
-let initialChips = 100;
-// playerChipsElement.textContent = initialChips;
+let playerChips = 100;
 let initial_dealer_card = ''
-// let dealerScore;
-// let initial_dealer_hand_value = 0
-// let player_score = 0
-
-
-
+let initial_dealer_score = 0
+let selectedBet = 0
 
 
 document.addEventListener("DOMContentLoaded", function() {
     const startGameModal = document.getElementById("startGameModal");
     const startGameButton = document.getElementById("start-game");
     const selectBetModal = document.getElementById("selectBetModal");
-    const dealerScore = document.getElementById("dealer-score");
     const playerChipsElement = document.getElementById("player-chips");
     const playerChipsModalElement = document.getElementById("player-chips-modal");
 
     // Hide the selectBetModal initially
     selectBetModal.style.display = "none";
 
-    // Hide the dealer-score initially
-    dealerScore.style.display = "none";
-
     // Show the startGameModal when the page loads
     startGameModal.style.display = "block";
 
     // Set the initial number of chips when the page loads
-    playerChipsElement.textContent = initialChips;
-    playerChipsModalElement.textContent = initialChips; // Set initial chips in the modal
+    playerChipsElement.textContent = playerChips;
+    playerChipsModalElement.textContent = playerChips;
 
     // Handle the "Start Game" button click
     startGameButton.addEventListener("click", function() {
@@ -48,19 +38,17 @@ document.addEventListener("DOMContentLoaded", function() {
         
         // Check if the input is a positive whole number
         if (/^\d+$/.test(selectedBetString)) {
-            const selectedBet = parseInt(selectedBetString, 10);
-            const playerChips = parseInt(playerChipsElement.textContent);
+            selectedBet = parseInt(selectedBetString, 10);
             
             if (selectedBet > 0 && selectedBet <= playerChips) {
                 // Close the selectBetModal
                 selectBetModal.style.display = "none";
 
-                // Update the displayed chips value in the HTML
-                playerChipsElement.textContent = playerChips - selectedBet;
-                playerChipsModalElement.textContent = playerChips - selectedBet; // Update chips in the modal
+                // Update playerChips and display value in the HTML
+                playerChips = playerChips - selectedBet;
+                playerChipsElement.textContent = playerChips;
+                playerChipsModalElement.textContent = playerChips;
 
-                // Update the JavaScript variable
-                initialChips -= selectedBet;
 
                 // Initialize the game (deal cards, show scores, etc.)
                 initializeGame();
@@ -73,8 +61,6 @@ document.addEventListener("DOMContentLoaded", function() {
             alert('Please enter a valid whole number.');
         }
     });
-
-    // Add more game initialization and logic functions
 });
 
 
@@ -85,16 +71,15 @@ function initializeGame() {
     fetch('/start_game')
         .then(response => response.json())
         .then(data => {
+            // Save face down card and initial total dealer score
             initial_dealer_card = data.dealer_cards[0]
-            player_score = data.player_score
-            dealer_score = data.dealer_score
-            console.log(dealer_score)
-            console.log(initial_dealer_card)
+            initial_dealer_score = data.initial_dealer_score
+
             // Create an image element for the face-down card
             const faceDownCardImage = document.createElement("img");
             faceDownCardImage.src = 'static/img/card_back.png';
             faceDownCardImage.setAttribute('id', 'faceDownImage');
-            // Append it to the dealer's card container in your HTML
+
             document.getElementById("dealer-hand").appendChild(faceDownCardImage);
 
             // Process the game data returned by the server
@@ -102,7 +87,7 @@ function initializeGame() {
                 // Create an image element for the player's card
                 const playerCardImage = document.createElement("img");
                 playerCardImage.src = cardToImagePath(card);
-                // Append it to the player's card container in your HTML
+
                 document.getElementById("player-hand").appendChild(playerCardImage);
             });
 
@@ -115,7 +100,7 @@ function initializeGame() {
                 // Create an image element for the dealer's card
                 const dealerCardImage = document.createElement("img");
                 dealerCardImage.src = cardToImagePath(card);
-                // Append it to the dealer's card container in your HTML
+
                 document.getElementById("dealer-hand").appendChild(dealerCardImage);
             });
 
@@ -130,13 +115,20 @@ function initializeGame() {
 
 
 
-
+// Take data from backend and convert to image path for frontend to get card images
 function cardToImagePath(card) {
-    const [value, suit] = card.split(' of ');
+    let [value, suit] = card.split(' of ');
+    
+    // Check if the value is '1' and replace it with 'ace'
+    if (value === '1') {
+        value = 'ace';
+    }
+
     return `static/img/${value.toLowerCase()}_of_${suit.toLowerCase()}.png`;
 }
 
-// Hit button, event listener:
+
+// Hit button, event listener
 const hitButton = document.getElementById("hit");
 hitButton.addEventListener("click", () => {
     fetch('/hit', { method: 'POST' })
@@ -144,35 +136,27 @@ hitButton.addEventListener("click", () => {
         .then(data => {
             // Process the new card data
             const newCardImage = document.createElement("img");
-            console.log(data.player_cards[data.player_cards.length - 1])
             newCardImage.src = cardToImagePath(data.player_cards[data.player_cards.length - 1]);
 
-            // Append it to the player's card container in your HTML
             document.getElementById("player-hand").appendChild(newCardImage);
 
             // Update the player's score
             document.getElementById("player-score").textContent = `Player Score: ${data.player_score}`;
             
             if (data.player_score > 21) {
-                // Player has busted - show the "End Game Modal" with the "You've busted, you lose" message
+                // Player has busted - show the "End Game Modal" with the "You've busted" message
                 const endGameModal = document.getElementById("endGameModal");
                 endGameModal.style.display = "block";
                 
-                // Set the text in the endGameHeader to "You've busted, you lose"
+                // Set the text in the endGameHeader to "You've busted"
                 const endGameHeader = document.getElementById("endGameHeader");
                 endGameHeader.textContent = "You've busted with " + data.player_score;
-            } else {
-                // player_score = data.player_score
             }
         })
         .catch(error => {
             console.error('Error handling hit:', error);
         });
 });
-
-
-
-
 
 
 function revealDealerCard(initial_dealer_card) {
@@ -182,8 +166,6 @@ function revealDealerCard(initial_dealer_card) {
     // Set the src attribute to the actual card's image
     faceDownCardImage.src = cardToImagePath(initial_dealer_card);
 }
-
-
 
 
 const standButton = document.getElementById("stand");
@@ -196,11 +178,7 @@ standButton.addEventListener("click", () => {
     revealDealerCard(initial_dealer_card);
 
     const dealerScore = document.getElementById("dealer-score");
-
-    // Show the dealer score
-    dealerScore.style.display = "block";
-
-    // Update the player and dealer scores
+    dealerScore.textContent = `Dealer Score: ${initial_dealer_score}`;
 
     // Recursive function for dealer hits
     function dealerHit(data, index) {
@@ -213,30 +191,65 @@ standButton.addEventListener("click", () => {
                 document.getElementById("dealer-hand").appendChild(newCardImage);
 
                 // Update the dealer's score in the DOM
-                document.getElementById("dealer-score").textContent = `Dealer Score: ${data.dealer_score}`;
-                
+                dealerScore.textContent = `Dealer Score: ${data.dealer_score}`;
+
                 // Continue with the next hit
                 dealerHit(data, index + 1);
-            }, 1000); // 1000 milliseconds (1 second) delay
+            }, 1000);
+
+            // Update the dealer's score with a delay
+            setTimeout(() => {
+                dealerScore.textContent = `Dealer Score: ${data.dealer_score}`;
+            }, (index - 1) * 1000);
         } else {
-            // All hits are done
-            // Handle the game logic for the dealer, e.g., checking for a winner
-            // handleDealerActions();
+            // Once all hitting is done, handle the game logic for the dealer
+            setTimeout(() => {
+                handleCompare(data);
+            }, 2000); 
         }
     }
 
     fetch('/stand', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
-            // Start the recursive dealerHit function
+            // Start the dealerHit function
             dealerHit(data, 2);
         })
         .catch(error => {
             console.error('Error handling stand:', error);
         });
+
+    // Function to handle dealer actions and display the modal
+    function handleCompare(data) {
+        // Check the outcome and display the appropriate modal and message
+        const outcome = data.outcome;
+        const endGameModal = document.getElementById("endGameModal");
+        const endGameHeader = document.getElementById("endGameHeader");
+        const playerChipsModalElement = document.getElementById("player-chips-modal");
+
+        if (outcome === "Dealer busts, you win!!") {
+            endGameHeader.textContent = `Dealer busts, you win!! Here are your ${2 * selectedBet} chips!`;
+            // Update the player's chips when they win
+            playerChips = playerChips + (2 * selectedBet)
+            playerChipsModalElement.textContent = playerChips;
+        } else if (outcome === "You win!!") {
+            endGameHeader.textContent = `You win!! Here are your ${2 * selectedBet} chips!`;
+            // Update the player's chips when they win
+            playerChips = playerChips + (2 * selectedBet)
+            playerChipsModalElement.textContent = playerChips;
+        } else if (outcome === "Dealer wins") {
+            endGameHeader.textContent = "Dealer wins";
+        } else {
+            endGameHeader.textContent = `It's a tie, here are your ${selectedBet} chips back.`;
+            // Return the bet to the player in case of a draw (push)
+            playerChips = playerChips + selectedBet
+            playerChipsModalElement.textContent = playerChips;
+        }
+
+        // Show the end game modal
+        endGameModal.style.display = "block";
+    }
 });
-
-
 
 
 
@@ -258,14 +271,6 @@ playAgainButton.addEventListener("click", () => {
     endGameModal.style.display = "none"
     // Open up select Bet Modal
     selectBetModal.style.display = "block"
-
-    // Reset the game on the server side
-    fetch('/play_again')
-        .then(response => response.text())
-        .then(data => {
-            console.log(data, 'water')
-        })
-        .catch(error => {
-            console.error('Error restarting the game:', error);
-        });
 });
+
+
