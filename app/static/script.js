@@ -225,22 +225,27 @@ standButton.addEventListener("click", () => {
         const outcome = data.outcome;
         const endGameModal = document.getElementById("endGameModal");
         const endGameHeader = document.getElementById("endGameHeader");
+        const endGameScore = document.getElementById("endGameScore");
         const playerChipsModalElement = document.getElementById("player-chips-modal");
 
         if (outcome === "Dealer busts, you win!!") {
             endGameHeader.textContent = `Dealer busts, you win!! Here are your ${2 * selectedBet} chips!`;
+            endGameScore.textContent = `Dealer Score: ${data.dealer_score} Player Score: ${data.player_score}`;
             // Update the player's chips when they win
             playerChips = playerChips + (2 * selectedBet)
             playerChipsModalElement.textContent = playerChips;
         } else if (outcome === "You win!!") {
             endGameHeader.textContent = `You win!! Here are your ${2 * selectedBet} chips!`;
+            endGameScore.textContent = `Dealer Score: ${data.dealer_score} Player Score: ${data.player_score}`;
             // Update the player's chips when they win
             playerChips = playerChips + (2 * selectedBet)
             playerChipsModalElement.textContent = playerChips;
         } else if (outcome === "Dealer wins") {
             endGameHeader.textContent = "Dealer wins";
+            endGameScore.textContent = `Dealer Score: ${data.dealer_score} Player Score: ${data.player_score}`;
         } else {
             endGameHeader.textContent = `It's a tie, here are your ${selectedBet} chips back.`;
+            endGameScore.textContent = `Dealer Score: ${data.dealer_score} Player Score: ${data.player_score}`;
             // Return the bet to the player in case of a draw (push)
             playerChips = playerChips + selectedBet
             playerChipsModalElement.textContent = playerChips;

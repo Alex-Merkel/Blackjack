@@ -21,21 +21,21 @@
             </div>
             <div class="d-flex justify-content-between m-4 w-100">
                 <div class="d-flex align-items-center" id="midInfoRow">
-                    <div id="dealer-score">
+                    <div id="dealer-score" class="fs-4 fw-bold">
                         <!-- Display dealer's score here -->
                     </div>
                 </div>
                 <div class="d-flex justify-content-evenly w-25">
-                    <button id="hit" class="btn btn-success">Hit</button>
-                    <button id="stand" class="btn btn-danger">Stand</button>
+                    <button id="hit" class="btn btn-success px-4">Hit</button>
+                    <button id="stand" class="btn btn-danger px-3">Stand</button>
                 </div>
                 <div>
-                    <div id="player-score">
+                    <div id="player-score" class="fs-4 fw-bold">
                         <!-- Display player's score here -->
                     </div>
                     <div>
                          <!-- Display player's chips here -->
-                        <p>Player Chips: <span id="player-chips"></span></p>
+                        <p class="fs-4 fw-bold">Player Chips: <span id="player-chips"></span></p>
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                 <p>
                     Please hit Start Game below to play.
                 </p>
-                <button id="start-game" class="btn btn-primary">Start Game</button>
+                <button id="start-game" class="btn btn-success">Start Game</button>
             </div>
         </div>
     </div>
@@ -66,9 +66,9 @@
     <div id="selectBetModal" class="modal">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
-                <p>Place your bet. (Current Chips: <span id="player-chips-modal"></span>)</p>
-                <input class="text-center" id="bet-amount" type="number" placeholder="0"/>
-                <button id="select-bet" class="btn btn-primary">Select Bet Amount</button>
+                <p class="mb-4">Place your bet. (Current Chips: <span id="player-chips-modal"></span>)</p>
+                <input class="text-center mb-4" id="bet-amount" type="number" placeholder="0"/>
+                <button id="select-bet" class="btn btn-success">Select Bet Amount</button>
             </div>
         </div>
     </div>
@@ -76,9 +76,10 @@
     <!-- End Game Modal -->
     <div id="endGameModal" class="modal">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content text-center">
                 <h3 id="endGameHeader"><!-- Display Won/Lost/Draw Here --></h3>
-                <button id="play-again" class="btn btn-success">Play Again</button>
+                <p id="endGameScore"><!--Display score here --></p>
+                <button id="play-again" class="btn btn-success mt-4">Play Again</button>
             </div>
         </div>
     </div>
