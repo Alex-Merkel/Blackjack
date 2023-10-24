@@ -1,1 +1,1 @@
-.venv/Scripts/gunicorn "app:app"
+gunicorn "app:app"
