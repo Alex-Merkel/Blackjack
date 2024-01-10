@@ -5,7 +5,7 @@
 An engaging and immersive Blackjack game brought to life through a blend of powerful technologies. This project utilizes Flask and Python for the server-side logic, while JavaScript, HTML, Bootstrap, and CSS work harmoniously to create a dynamic and visually stunning gaming experience.
 
 ### Key Features:
-- **Dynamic Card Display:** Utilizes card images dynamically to visually represent gameplay and display both dealer (only 1 card showing at first) and player hands.
+- **Dynamic Card Display:** Utilizes card images dynamically to visually represent gameplay and display both dealer (only 1 card showing at first) and player (both cards showing right away) hands.
 - **Responsive Design:** Images are configured to adjust and scale based on different screen sizes, ensuring a seamless experience across various devices, including mobile.
 
 ## Installation Instructions
