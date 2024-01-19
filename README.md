@@ -65,7 +65,7 @@ If you stumble upon a bug, I'd love to hear about it! Please open an issue and i
 Excited about a new feature idea? Don't hesitate to share it with me by opening an issue! Your clear description of the proposed feature helps me understand your needs better.
 
 ### Note for Contributors:
-I welcome and appreciate your contributions! While this project maintains its codebase, your suggestions and improvements are integral to its growth. Please feel free to suggest enhancements and report issues. However, any code modifications require explicit permission.
+I welcome and appreciate your contributions! While this project maintains it's codebase, your suggestions and improvements are integral to its growth. Please feel free to suggest enhancements and report issues. However, any code modifications require explicit permission.
 
 Thank you for being a part of this project's journey to improvement and excellence!
 
