@@ -58,7 +58,7 @@ This project doesn't require any specific configuration steps beyond the install
 
 ### Bug Reports:
 
-If you stumble upon a bug, I'd love to hear about it! Please open an issue and include detailed steps to help me reproduce the bug. Your input is incredibly valuable in improving this application.
+If you stumble upon a bug, I would love to hear about it! Please open an issue and include detailed steps to help me reproduce the bug. Your input is incredibly valuable in improving this application.
 
 ### Feature Suggestions:
 
