@@ -11,7 +11,7 @@ An engaging and immersive Blackjack game brought to life through a blend of powe
 ## Installation Instructions
 
 1. Clone the repository:
-- https://github.com/Alex-Merkel/Blackjack.git:
+- https://github.com/Alex-Merkel/Blackjack.git
 - cd Blackjack
 
 2. Install the required Python libraries:
