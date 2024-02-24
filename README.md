@@ -24,7 +24,7 @@ An engaging and immersive Blackjack game brought to life through a blend of powe
 
 **Start the Flask Server within a Virtual Environment:**
 
-   - First, create and activate a virtual environment:
+   - First create and activate a virtual environment:
      ```
      python -m venv venv
      source venv/bin/activate   # For Unix/macOS
