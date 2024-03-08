@@ -18,7 +18,7 @@ An engaging and immersive Blackjack game brought to life through a blend of powe
 - pip install -r requirements.txt
 
 
-## Usage
+## Usage:
 
 ### Backend (Flask):
 
