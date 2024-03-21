@@ -31,7 +31,7 @@ An engaging and immersive Blackjack game brought to life through a blend of powe
      .\venv\Scripts\activate    # For Windows
      ```
    
-   - Install required dependencies (if not already installed):
+   - Install required dependencies (if they are not already installed):
      ```
      pip install -r requirements.txt
      ```
